@@ -206,13 +206,16 @@ window.addEventListener('load',function() {
 
                update(){
 
+
+                
+
                             game.checkPosition();
 
                             if(game.positions==0){this.x+=this.speedX;} else {
-                               if(game.positions.includes('BOTTOM RIGHT')){this.x-=this.speedX*2;this.y-=this.speedY;};
+                               if(game.positions.includes('BOTTOM RIGHT')){this.x-=this.speedX;this.y-=this.speedY*2;};
                                if(game.positions.includes('BOTTOM LEFT')){this.x+=this.speedX*2;this.y-=this.speedY;};
                                 if(game.positions.includes('TOP RIGHT')){this.x-=this.speedX;this.y+=this.speedY*2;};
-                                 if(game.positions.includes('TOP LEFT')){this.x+=this.speedX;this.y+=this.speedY*2;};};
+                                 if(game.positions.includes('TOP LEFT')){this.x+=this.speedX*2;this.y+=this.speedY;};};
 
                             //    console.log(game.positions,game.positions=='BOTTOM LEFT');
                            
@@ -888,8 +891,9 @@ window.addEventListener('load',function() {
             context.fillText('Enemy destroyed: '+this.game.destoyed,25,190);
             context.fillText('Death per sec '+(this.game.hit/this.game.gameTime*1000).toFixed(1),25,230);
             context.fillText('Kill per sec '+(this.game.destoyed/this.game.gameTime*1000).toFixed(1),25,270);
-
+            context.fillText('Kill per sec '+(this.game.positions),25,310);
             
+
             if(this.game.player.powerUp)context.fillStyle='#ffffbd';
 
             context.fillStyle=this.color;
@@ -973,7 +977,8 @@ window.addEventListener('load',function() {
 
             this.background.update();
 
-            if(!this.gameOver)this.player.update();
+            // if(!this.gameOver)
+            this.player.update();
             if (this.ammoTimer>this.ammoInterval)
             {if (this.ammo<this.maxAmmo)this.ammo++
             this.ammoTimer=0;
@@ -1265,15 +1270,15 @@ window.addEventListener('load',function() {
         checkPosition(){
 
    
-
+            
                 this.ennemies.forEach(e=>
                     {
                         
-                     
-                          if(e.x<game.player.x&&e.y<game.player.y){this.positions=0; this.positions=[];this.positions.push('BOTTOM RIGHT');};
-                          if(e.x<game.player.x&&e.y>game.player.y){this.positions=0; this.positions=[];this.positions.push('TOP RIGHT');};
+                        
+                          if(e.x<(game.player.x)&&e.y<game.player.y){this.positions=0; this.positions=[];this.positions.push('BOTTOM RIGHT');};
+                          if(e.x<(game.player.x)&&e.y>game.player.y){this.positions=0; this.positions=[];this.positions.push('TOP RIGHT');};
                            if(e.x>game.player.x&&e.y<game.player.y){this.positions=0; this.positions=[];this.positions.push('BOTTOM LEFT');};
-                            if(e.x>game.player.x&&e.y>game.player.y){this.positions=0; this.positions=[];this.positions.push('BOTTOM RIGHT');};
+                            if(e.x>game.player.x&&e.y>game.player.y){this.positions=0; this.positions=[];this.positions.push('TOP LEFT');};
 
 
                         //   console.log(this.positions);
