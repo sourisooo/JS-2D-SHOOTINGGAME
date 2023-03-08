@@ -39,7 +39,23 @@ window.addEventListener('load',function() {
                     {this.keys.push(e.key);};
 
                     
-                    
+                    if((e.key==='r')&&(this.game.gameOver==true))
+                             {
+
+                                this.game.gameOver==false;
+                                this.game.gameTime==0;
+                                // this.game.player.x=0;
+                                // this.game.player.y=window.innerHeight/2;
+                                this.game.ennemies=0;
+                                this.game.ennemies=[];
+                                this.game.hit==0;
+                                this.game.destoyed==0;
+                                this.game.proks=0;
+                                this.game.proks=[];
+                               
+
+
+                               };
 
 
                     // if((this.keys.length!=0)&&this.game.particles.length<50) 
@@ -170,6 +186,60 @@ window.addEventListener('load',function() {
     }
 
 
+     class Prok extends Projecticle{
+
+
+        constructor(game,x,y){
+
+            super(game);
+            this.x=x;
+            this.width=228/2;
+            this.height=169/2;
+            this.y=y;
+            this.frameY=Math.floor(Math.random()*3);
+            this.image=projectile;
+            this.speedX=(Math.random()*-1.5-0.5)/7;
+            this.speedY=(Math.random()*-1.5-0.5)/7;
+           
+
+        }
+
+               update(){
+
+                            game.checkPosition();
+
+                            if(game.positions==0){this.x+=this.speedX;} else {
+                               if(game.positions.includes('BOTTOM RIGHT')){this.x-=this.speedX*2;this.y-=this.speedY;};
+                               if(game.positions.includes('BOTTOM LEFT')){this.x+=this.speedX*2;this.y-=this.speedY;};
+                                if(game.positions.includes('TOP RIGHT')){this.x-=this.speedX;this.y+=this.speedY*2;};
+                                 if(game.positions.includes('TOP LEFT')){this.x+=this.speedX;this.y+=this.speedY*2;};};
+
+                            //    console.log(game.positions,game.positions=='BOTTOM LEFT');
+                           
+                
+                              if(((this.x)<0))this.markedForDeletion=true;
+                              if(((this.x)>window.innerWidth))this.markedForDeletion=true;
+                              if(this.y<0)this.markedForDeletion=true;
+                              if(this.y>window.innerHeight)this.markedForDeletion=true;
+
+
+                 }
+
+
+                   draw(context){
+
+            // context.fillStyle='yellow';
+            // context.fillRect(this.x,this.y,this.width,this.height);
+              context.drawImage(this.image,0,0,this.width,this.height,this.x-50,this.y-70,this.width*5,this.height*5);
+
+            
+                    
+
+        }
+
+         }
+   
+
     class Particle {
 
        constructor(game,x,y){
@@ -195,11 +265,11 @@ window.addEventListener('load',function() {
 
        }
 
-       update(deltaTime){
+       update(){
 
             this.angle+=this.va;
             this.speedY+=this.gravity;
-            console.log(this.game.player.shot.length);
+            // console.log(this.game.player.shot.length);
 
 
 
@@ -282,7 +352,10 @@ window.addEventListener('load',function() {
 
         update(deltaTime){
             // this.x += this.speed;
-          
+            
+
+            if(this.y<100)(this.y=100);
+            if(this.y>(window.innerHeight-200))(this.y=(window.innerHeight-200));
 
             if (this.game.input.keys.includes('ArrowUp')) this.speedY=-this.maxSpeed;
             else if(this.game.input.keys.includes('ArrowDown'))this.speedY=this.maxSpeed;
@@ -380,57 +453,8 @@ window.addEventListener('load',function() {
         }
 
 
-        // shootTop(){
-
-        
-        //         if((this.frameX<this.maxFrame)&&(this.projectiles.length<50))
-
-        //         {this.frameX++;}else
-
-        //                     {
-                                
-                                
-                                
-        //                         this.frameX=0;
-        //                         // for(let i=0;i<game.input.shots.length;i++)
-        //                         {
-                                    
-        //                             this.projectiles.push(new Projecticle(this.game,this.x+80,this.y+30));
-        //                             this.projectiles.push(new Projecticle(this.game,this.x-80,this.y-30));
-                                    
-                                
-        //                         };
-                            
-                            
-
-        //                     };
-
-    
-
-             
-
-        // }
-
-
-        // shootBottom(){
-
-        //     if((this.frameX<this.maxFrame)&&(this.projectiles.length<50))
-
-        //     {this.frameX++;}else
-
-        //                 {
-                            
-                            
-                            
-        //                     this.frameX=0;
-        //                     for(let i=0;i<game.input.shots.length/2;i++)
-        //                     {this.projectiles.push(new Projecticle(this.game,this.x+80,this.y-30));};
-                        
-                        
-
-        //                 };
-
-        // }
+       
+      
 
 
         enterPowerUp(){
@@ -456,7 +480,7 @@ window.addEventListener('load',function() {
             
             this.speedX=Math.random()*-1.5-0.5;
             this.markedForDeletion=false;
-            this.lives=5;
+            this.lives=10;
             this.score=this.lives;
             this.frameX=0;
             this.frameY=0;
@@ -489,6 +513,54 @@ window.addEventListener('load',function() {
 
         }
 
+
+            fire(deltaTime){
+
+                if (game.proks.length<Math.floor(Math.random()*6+1))
+
+                {
+                    
+                 game.checkPosition();
+                    
+                game.ennemies.forEach(e =>
+                  
+                    {
+                        
+
+                        game.proks.push(new Prok(game,e.x,e.y)); 
+
+
+                        // console.log(e.x,e.y);
+
+
+
+
+                    })
+
+              
+
+               
+               
+                };
+             
+                game.proks.forEach(p=>
+                    {
+
+
+                        p.update(deltaTime);
+
+
+                    });
+
+                    // console.log(game.proks);
+
+                     game.proks=game.proks.filter(p=>!p.markedForDeletion);
+
+
+
+
+            }
+
     }
 
 
@@ -503,7 +575,7 @@ window.addEventListener('load',function() {
                 this.y=Math.random()*(this.game.height*0.9-this.height);
                 this.image =angler1;
                 this.frameY=Math.floor(Math.random()*3);
-                this.lives=5;
+                this.lives=12;
                 this.score=this.lives;
 
 
@@ -526,7 +598,7 @@ window.addEventListener('load',function() {
                 this.y=Math.random()*(this.game.height*0.9-this.height);
                 this.image =angler2;
                 this.frameY=Math.floor(Math.random()*2);
-                this.lives=5;
+                this.lives=12;
                 this.score=this.lives;
 
 
@@ -560,7 +632,7 @@ window.addEventListener('load',function() {
                 this.y=Math.random()*(this.game.height*0.9-this.height);
                 this.image =angler3;
                 this.frameY=Math.floor(Math.random()*2);
-                this.lives=6;
+                this.lives=15;
                 this.score=15;
                 this.type='lucky';
 
@@ -589,7 +661,7 @@ window.addEventListener('load',function() {
                 this.y=Math.random()*(this.game.height*0.9-this.height);
                 this.image =hive;
                 this.frameY=0;
-                this.lives=20;
+                this.lives=25;
                 this.score=20;
                 this.type='hive';
                 this.speedX=Math.random()*-1.2-0.2;
@@ -614,7 +686,7 @@ window.addEventListener('load',function() {
                 this.y=y;
                 this.image =drone;
                 this.frameY=Math.floor(Math.random()*2);
-                this.lives=3;
+                this.lives=8;
                 this.score=3;
                 this.type='drone';
                 this.speedX=Math.random()*-4.2-0.5;
@@ -627,7 +699,7 @@ window.addEventListener('load',function() {
         }
 
 
-
+        
 
     class Layer {
 
@@ -814,6 +886,9 @@ window.addEventListener('load',function() {
             context.fillText('PRESS A, E, Q, D, W or C to shot, actually using: '+this.game.player.shot,20,40);
             context.fillText('Killed by enemy: '+this.game.hit,25,150);
             context.fillText('Enemy destroyed: '+this.game.destoyed,25,190);
+            context.fillText('Death per sec '+(this.game.hit/this.game.gameTime*1000).toFixed(1),25,230);
+            context.fillText('Kill per sec '+(this.game.destoyed/this.game.gameTime*1000).toFixed(1),25,270);
+
             
             if(this.game.player.powerUp)context.fillStyle='#ffffbd';
 
@@ -832,16 +907,16 @@ window.addEventListener('load',function() {
                 let message1;
                 let message2;
                 
-                if(this.game.score>this.game.winningScore)
-                {message1='Win';
-                message2='Welldone'}
+              
+                message1='Game Over';
+                message2='Press R to restart the game'
 
                 context.font='50px '+this.fontFamiliy;
-                context.fillText(message1,this.game.width*0.5,this.game.height*0.5-40);
+                context.fillText(message1,window.innerWidth*0.5,window.innerHeight*0.5-40);
                 context.font='25px '+this.fontFamiliy;
-                context.fillText(message2,this.game.width*0.5,this.game.height*0.5+40);
+                context.fillText(message2,window.innerWidth*0.5,window.innerHeight*0.5+40);
                 
-
+                
 
             }
 
@@ -886,17 +961,19 @@ window.addEventListener('load',function() {
             this.explosions=[];
             this.hit=0;
             this.destoyed=0;
+            this.proks=[];
+            this.positions=[];
 
         }
 
         update(deltaTime){
 
-            if(!this.gameOver)this.gameTime+=deltaTime;
-            // if(this.gameTime>this.timeLimit)this.gameOver=true;
+           this.gameTime+=deltaTime;
+            // if(this.ennemies.length>70)this.gameOver=true;
 
             this.background.update();
 
-            this.player.update();
+            if(!this.gameOver)this.player.update();
             if (this.ammoTimer>this.ammoInterval)
             {if (this.ammo<this.maxAmmo)this.ammo++
             this.ammoTimer=0;
@@ -934,7 +1011,72 @@ window.addEventListener('load',function() {
 
                         e.update();
 
-                      
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+                        e.fire(deltaTime);
+
+
+                        this.proks.forEach(p =>
+                        
+                            {
+
+                                p.update();
+
+
+                                if(this.checkCollision(this.player,p))
+                       
+                                {
+                                    
+                                    p.markedForDeletion=true;
+                                    this.addExplosion(this.player);
+                                    this.hit++;
+                                    // this.player.x=0;
+                                    // this.player.y=window.innerHeight/2;
+                
+                                    // console.log(this.player.x,this.player.y);
+                
+                                }
+
+
+                            });
+
+
+
+
+                //  if (this.proks.length<10)
+
+                //  {
+                     
+                //   game.checkPosition();
+                     
+                 
+
+                //  this.proks.push(new Prok(this));
+                
+
+                
+                
+                //  };
+              
+                //  this.proks.forEach(p=>
+                //      {
+
+
+                //          p.update(deltaTime);
+
+
+                //      });
+
+                //      console.log(this.proks);
+
+                //       this.proks=this.proks.filter(p=>!p.markedForDeletion);
+
+                     
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////  
+
 
                         if(this.checkCollision(this.player,e))
                        
@@ -942,11 +1084,20 @@ window.addEventListener('load',function() {
                             
                             // e.markedForDeletion=true;
                             this.addExplosion(e);
-                            this.hit++;
-                            this.player.x=0;
-                            this.player.y=window.innerHeight/2;
+                            this.addExplosion(this.player);
+                            
 
-                            console.log(this.player.x,this.player.y);
+                            if(this.player.x>e.x){this.player.x=this.player.x+60;e.x=e.x-60}else{this.player.x=this.player.x-60;e.x=e.x+60}
+                            if(this.player.y>e.y){this.player.y=this.player.y+60;e.y=e.y-60}else{this.player.y=this.player.y-60;e.y=e.y+60}
+
+                            this.hit=this.hit+1;
+
+                            // this.player.x=this.player.x-20;
+                            // this.player.y=this.player.y+20;
+                            // e.x=e.x+20;
+                            // e.y=e.y-20;
+
+                            // console.log(this.player.x,this.player.y);
 
                         }
 
@@ -1005,12 +1156,21 @@ window.addEventListener('load',function() {
 
                     this.ennemies=this.ennemies.filter(e=>!e.markedForDeletion);
 
+
+                 
+
+                        //  console.log(this.proks);
+                   
+
                     if(this.enemyTimer>this.enemyInterval && !this.gameOver)
 
                     {
 
                         this.addEnemy();
                         this.enemyTimer=0;
+
+
+
 
 
                     } else {this.enemyTimer+=deltaTime};
@@ -1052,6 +1212,16 @@ window.addEventListener('load',function() {
 
                 });
 
+                this.proks.forEach(p=>
+                        {
+
+
+                            p.draw(context);
+
+
+                        });
+
+
 
         }
 
@@ -1091,6 +1261,36 @@ window.addEventListener('load',function() {
 
 
         }
+
+        checkPosition(){
+
+   
+
+                this.ennemies.forEach(e=>
+                    {
+                        
+                     
+                          if(e.x<game.player.x&&e.y<game.player.y){this.positions=0; this.positions=[];this.positions.push('BOTTOM RIGHT');};
+                          if(e.x<game.player.x&&e.y>game.player.y){this.positions=0; this.positions=[];this.positions.push('TOP RIGHT');};
+                           if(e.x>game.player.x&&e.y<game.player.y){this.positions=0; this.positions=[];this.positions.push('BOTTOM LEFT');};
+                            if(e.x>game.player.x&&e.y>game.player.y){this.positions=0; this.positions=[];this.positions.push('BOTTOM RIGHT');};
+
+
+                        //   console.log(this.positions);
+                        //   console.log(e.x,game.player.x);
+                        //   console.log(e.y,game.player.y);
+                    
+                        //   console.log(e.x>game.player.x&&e.y<game.player.y);
+
+
+
+                    });
+
+
+            
+        }
+
+
 
     }
 
