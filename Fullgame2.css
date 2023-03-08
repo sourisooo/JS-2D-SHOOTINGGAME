@@ -27,6 +27,7 @@
     font-size: 80px; */
     top: 0;
     left:0;
+    background-color: rgba(0, 0, 0, 0.486);
 
   
     }
@@ -39,12 +40,7 @@
     }
 
 
-    #gears {
 
-
-      background-color: rgb(16, 9, 116);
-
-    }
 
 
   #loading {
